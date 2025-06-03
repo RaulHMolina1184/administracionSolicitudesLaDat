@@ -55,5 +55,39 @@ namespace DataAccess
                 };
             }
         }
+
+        public void RegistrarIntentoFallido(string nombreUsuario)
+        {
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
+                throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
+
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var parameters = new DynamicParameters();
+                parameters.Add("@pI_nombreUsuario", nombreUsuario, DbType.String, ParameterDirection.Input);
+
+                connection.Execute("registrar_intento_fallido", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        public void ReiniciarIntentos(string nombreUsuario)
+        {
+            if (string.IsNullOrWhiteSpace(nombreUsuario))
+                throw new ArgumentException("Nombre de usuario inválido", nameof(nombreUsuario));
+
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var parameters = new DynamicParameters();
+                parameters.Add("@pI_nombreUsuario", nombreUsuario, DbType.String, ParameterDirection.Input);
+
+                connection.Execute("reiniciar_intentos", parameters, commandType: CommandType.StoredProcedure);
+            }
+        }
+
+
     }
 }

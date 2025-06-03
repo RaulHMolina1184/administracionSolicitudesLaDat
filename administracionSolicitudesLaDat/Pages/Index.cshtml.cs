@@ -30,7 +30,7 @@ namespace administracionSolicitudesLaDat.Pages
             if (resultado) // Siempre espera un true
             {
                 // guardar el usuario en sesión o redirigirlo
-                return RedirectToPage("/Success"); // Página de destino después del inicio de sesión exitoso
+                return RedirectToPage("/Principal"); // Página de destino después del inicio de sesión exitoso
             }
 
             Mensaje = "Usuario y/o\r\ncontraseña incorrectos.";

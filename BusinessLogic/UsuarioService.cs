@@ -23,14 +23,27 @@ namespace BusinessLogic
         // Método para validar login
         public bool Login(string nombreUsuario, string passwordInput)
         {
-            var credentials = _usuarioDA.VerifyUsuario(nombreUsuario); // Usuario hacía la base de datos
+            var credentials = _usuarioDA.VerifyUsuario(nombreUsuario); // Llama sp hacía la base de datos
 
-            if (credentials.Encontrado == 1 && credentials.ContraseniaCifrada != null && credentials.Nonce != null)
+            // Si no existe o está bloqueado
+            if (credentials.Encontrado != 1 || credentials.ContraseniaCifrada == null || credentials.Nonce == null)
             {
-                return _encryptionService.VerifyPassword(credentials.ContraseniaCifrada, credentials.Nonce, passwordInput);
+                return false;
             }
 
-            return false;
+            // Verificar contraseña
+            bool esValida = _encryptionService.VerifyPassword(credentials.ContraseniaCifrada, credentials.Nonce, passwordInput);
+
+            if (esValida)
+            {
+                _usuarioDA.ReiniciarIntentos(nombreUsuario); // Resetear contador e intento
+                return true;
+            }
+            else
+            {
+                _usuarioDA.RegistrarIntentoFallido(nombreUsuario); // Incrementar contador y bloquear si corresponde
+                return false;
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Org.BouncyCastle.Security;
 using System;
 using System.Text;
 using System.Security.Cryptography;
+using Entities;
 
 namespace BusinessLogic
 {
